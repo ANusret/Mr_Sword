@@ -29,7 +29,7 @@ int main()
 
         // draw the map
         DrawTextureEx(Map, mapPos, 0.0, 4.0, WHITE);
-        lord.tick(GetFrameTime());
+        lord.tick(dT);
         
         // check map bounds
         if (lord.getWorldPos().x < 0.f ||

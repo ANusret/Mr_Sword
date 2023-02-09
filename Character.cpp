@@ -3,24 +3,20 @@
 #include "raymath.h"
 #include <string>
 
-Character::Character()
-{
-    width = texture.width / maxFrame;
-    height = texture.height;
-}
-
-void Character::setScreenPos(int windowWidth, int windowHeight)
+Character::Character(int windowWidth, int windowHeight)
 {
     screenPos = {
-        (float)windowWidth / 2.0f - 4.0f * (0.5f * width),
-        (float)windowHeight / 2.0f - 4.0f * (0.5f * height)};
+        static_cast<float>(windowWidth) / 2.0f - scale * (0.5f * width),
+        static_cast<float>(windowHeight) / 2.0f - scale * (0.5f * height)};
+    width = texture.width / maxFrame;
+    height = texture.height;
 }
 
 void Character::tick(float dT)
 {
 
     worldLastFrame = worldPos;
-    
+
     Vector2 direction{};
     if (IsKeyDown(KEY_A))
         direction.x -= 1.0;
@@ -42,7 +38,7 @@ void Character::tick(float dT)
     {
         texture = idle;
     }
-    
+
     // update animation frame
     runningTime += dT;
     if (runningTime >= updateTime)
@@ -62,8 +58,8 @@ void Character::tick(float dT)
     Rectangle dest{
         screenPos.x,
         screenPos.y,
-        4.0f * width,
-        4.0f * height};
+        scale * width,
+        scale * height};
     Vector2 origin{0.0f, 0.0f};
     DrawTexturePro(texture, source, dest, origin, 0.0f, WHITE);
 }
@@ -71,4 +67,14 @@ void Character::tick(float dT)
 void Character::undoMovement()
 {
     worldPos = worldLastFrame;
+}
+
+Rectangle Character::getCharacterRec()
+{
+    return Rectangle{
+        screenPos.x,
+        screenPos.y,
+        width * scale,
+        height * scale
+    };
 }

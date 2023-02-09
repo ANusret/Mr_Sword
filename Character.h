@@ -5,13 +5,11 @@
 class Character
 {
 public:
-    Character();
+    Character(int windowWidth, int windowHeight);
     Vector2 getWorldPos() { return worldPos; }
-    void setScreenPos(int windowWidth, int windowHeight);
     void tick(float dT);
     void undoMovement();
-
-    
+    Rectangle getCharacterRec();
 private:
     Texture texture{LoadTexture("Characters/lord_idle_spritesheet.png")};
     Texture idle{LoadTexture("Characters/lord_idle_spritesheet.png")};
@@ -35,4 +33,5 @@ private:
     float updateTime{1.0f / 12.0f};
     float width{};
     float height{};
+    float scale{4.0f};
 };

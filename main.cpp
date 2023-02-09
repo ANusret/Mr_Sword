@@ -3,7 +3,6 @@
 #include "Character.h"
 #include <string>
 
-
 int main()
 {
     const int windowHeight{512};
@@ -11,6 +10,8 @@ int main()
     InitWindow(windowWidth, windowHeight, "Mr. Sword");
 
     Texture2D Map = LoadTexture("Map/WorldMap.png");
+    Vector2 mapPos{0.0, 0.0};
+    const float mapScale{4.0f};
 
     Character lord;
     lord.setScreenPos(windowWidth, windowHeight);
@@ -24,10 +25,20 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
 
-        // draw map
-        DrawTextureEx(Map, lord.getWorldPos(), 0.0f, 4.0f, WHITE);
+        mapPos = Vector2Scale(lord.getWorldPos(), -1.f);
 
-        lord.tick(dT);
+        // draw the map
+        DrawTextureEx(Map, mapPos, 0.0, 4.0, WHITE);
+        lord.tick(GetFrameTime());
+        
+        // check map bounds
+        if (lord.getWorldPos().x < 0.f ||
+            lord.getWorldPos().y < 0.f ||
+            lord.getWorldPos().x + windowWidth > Map.width * mapScale ||
+            lord.getWorldPos().y + windowHeight > Map.height * mapScale)
+        {
+            lord.undoMovement();
+        }
 
         EndDrawing();
     }
@@ -36,29 +47,3 @@ int main()
 
     return 0;
 }
-
-/*
-Texture2D Map = LoadTexture("Map/WorldMap.png");
-    Vector2 mapPos{0.0, 0.0};
-    float speed{2.0f};
-
-    SetTargetFPS(60);
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
-        ClearBackground(WHITE);
-
-        Vector2 direction{};
-        if (IsKeyDown(KEY_A))
-            direction.x -= 1.0f;
-        if (IsKeyDown(KEY_D))
-            direction.x += 1.0f;
-        if (IsKeyDown(KEY_W))
-            direction.y -= 1.0f;
-        if (IsKeyDown(KEY_S))
-            direction.y += 1.0f;
-        if (Vector2Length(direction) != 0.0f)
-        {
-            mapPos = Vector2Subtract(mapPos, Vector2Scale(Vector2Normalize(direction), speed));
-        }
-*/

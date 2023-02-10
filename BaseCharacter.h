@@ -1,5 +1,3 @@
-
-
 #ifndef BASE_CHARACTER_H
 #define BASE_CHARACTER_H
 #include "raylib.h"
@@ -12,12 +10,15 @@ public:
     void undoMovement();
     Rectangle getRec();
     virtual void tick(float dT);
+    // it's a abstract, so mean we can only derive child classes from it.
+    virtual Vector2 getScreenPos() = 0;
+    bool getAlive(){ return alive; }
+    bool setAlive(bool alive){ this->alive = alive; }
 
 protected:
     Texture texture{};
     Texture idle{};
     Texture run{};
-    Vector2 screenPos{};
     Vector2 worldPos{};
     // last possition frame on the world
     Vector2 worldLastFrame{};
@@ -37,7 +38,10 @@ protected:
     float width{};
     float height{};
     float scale{4.0f};
+    Vector2 velocity{};
+
 private:
+    bool alive{true};
 };
 
 #endif

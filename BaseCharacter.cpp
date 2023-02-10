@@ -14,8 +14,8 @@ void BaseCharacter::undoMovement()
 Rectangle BaseCharacter::getRec()
 {
     return Rectangle{
-        screenPos.x,
-        screenPos.y,
+        getScreenPos().x,
+        getScreenPos().y,
         width * scale,
         height * scale};
 }
@@ -35,6 +35,21 @@ void BaseCharacter::tick(float dT)
             frame = 0;
     }
 
+    if (Vector2Length(velocity) != 0.0)
+    {
+        // set worldPos = worldPos + direction
+
+        worldPos = Vector2Add(worldPos, Vector2Scale(Vector2Normalize(velocity), speed));
+        velocity.x < 0.f ? rightLeft = -1.f : rightLeft = 1.f;
+        texture = run;
+    }
+    else
+    {
+        texture = idle;
+    }
+
+    velocity = {};
+
     // draw character
     Rectangle source{
         frame * width,
@@ -42,8 +57,8 @@ void BaseCharacter::tick(float dT)
         rightLeft * width,
         height};
     Rectangle dest{
-        screenPos.x,
-        screenPos.y,
+        getScreenPos().x,
+        getScreenPos().y,
         scale * width,
         scale * height};
     Vector2 origin{0.0f, 0.0f};
